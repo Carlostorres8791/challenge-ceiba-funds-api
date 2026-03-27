@@ -79,13 +79,14 @@ GET /transactions?userId={userId}
 1. Clone the repository:
 
 ```
-git clone https://github.com/TU-USUARIO/TU-REPO.git
+git clone https://github.com/Carlostorres8791/challenge-ceiba-funds-api.git
+
 ```
 
 2. Navigate to the project:
 
 ```
-cd TU-REPO
+cd challenge-ceiba-funds-api
 ```
 
 3. Run the application:
