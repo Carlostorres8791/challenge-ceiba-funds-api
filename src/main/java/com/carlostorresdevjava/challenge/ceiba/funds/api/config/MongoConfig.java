@@ -1,5 +1,5 @@
 package com.carlostorresdevjava.challenge.ceiba.funds.api.config;
-
+/*
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import org.springframework.context.annotation.Bean;
@@ -11,4 +11,4 @@ public class MongoConfig {
     public MongoClient mongoClient() {
         return MongoClients.create("mongodb+srv://admin:Admin123*@ceiba-funds-cluster.jdbmey3.mongodb.net/ceiba_funds_db?retryWrites=true&w=majority");
     }
-}
+}*/
