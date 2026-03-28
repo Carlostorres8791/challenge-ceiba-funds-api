@@ -1,23 +1,27 @@
-# challenge-ceiba-funds-api
-Backend technical challenge - Investment funds management API
-
 # 💼 Backend Technical Challenge - Investment Funds API
 
 This project is a backend API developed as part of a technical challenge. It allows users to manage investment funds, including subscriptions, cancellations, and transaction history.
 
 ---
 
-## 🚀 Technologies Used
+# 🧠 Business Context
+
+BTG Pactual requires a platform where users can manage their investment funds without contacting an advisor.
+
+---
+
+# 🚀 Technologies Used
 
 * Java 17
 * Spring Boot
 * Spring Data MongoDB
 * Maven
-* JUnit (Unit Testing)
+* JUnit & Mockito (Unit Testing)
+* Docker
 
 ---
 
-## 📌 Features
+# 📌 Features
 
 * Subscribe to an investment fund
 * Cancel fund subscription
@@ -25,71 +29,142 @@ This project is a backend API developed as part of a technical challenge. It all
 * Validate minimum fund amount
 * Balance management (initial balance: COP $500,000)
 * Simulated notifications (Email/SMS)
+* JWT Authentication
 
 ---
 
-## 🧠 Business Rules
+# 🧠 Business Rules
 
 * Each user starts with a balance of **COP $500,000**
-
 * Each fund has a **minimum investment amount**
-
 * If the user does not have enough balance:
 
-  ```
-  No tiene saldo disponible para vincularse al fondo <Nombre del fondo>
-  ```
+```
+No tiene saldo disponible para vincularse al fondo <Nombre del fondo>
+```
 
 * When a subscription is canceled, the amount is returned to the user
-
 * Each transaction has a unique identifier
 
 ---
 
-## 📦 API Endpoints
+# 🔐 Authentication (JWT)
 
-### 📌 Get all funds
+The API is secured using JWT.
 
-```
-GET /funds
-```
+## 📌 Flow:
 
-### 📌 Subscribe to a fund
-
-```
-POST /funds/{fundId}/subscribe?userId={userId}
-```
-
-### 📌 Cancel subscription
+1. User logs in
+2. Receives a token
+3. Uses the token in requests:
 
 ```
-POST /funds/{fundId}/cancel?userId={userId}
-```
-
-### 📌 Get transaction history
-
-```
-GET /transactions?userId={userId}
+Authorization: Bearer <token>
 ```
 
 ---
 
-## 🧪 Running the Project
+# 📦 API Endpoints
+
+## 🔑 Authentication
+
+```
+POST /api/users/login
+```
+
+---
+
+## 👤 Users
+
+```
+POST /api/users
+```
+
+---
+
+## 📌 Funds
+
+```
+GET /api/funds
+POST /api/funds
+```
+
+---
+
+## 📌 Subscriptions
+
+### Subscribe
+
+```
+POST /api/funds/subscribe
+```
+
+Body:
+
+```
+{
+  "userId": "user1",
+  "fundId": "1",
+  "amount": 100000
+}
+```
+
+---
+
+### Cancel Subscription
+
+```
+POST /api/funds/cancel/{subscriptionId}
+```
+
+---
+
+### Get User Subscriptions
+
+```
+GET /api/funds/subscriptions/{userId}
+```
+
+---
+
+## 📊 Transactions
+
+```
+GET /api/transactions?userId={userId}
+```
+
+---
+
+# 🐳 Running with Docker (Recommended)
+
+This project uses Docker to run MongoDB locally, avoiding external dependencies.
+
+## 📋 Prerequisites
+
+* Docker Desktop installed and running
+
+---
+
+## 🚀 Steps
 
 1. Clone the repository:
 
 ```
 git clone https://github.com/Carlostorres8791/challenge-ceiba-funds-api.git
-
-```
-
-2. Navigate to the project:
-
-```
 cd challenge-ceiba-funds-api
 ```
 
-3. Run the application:
+---
+
+2. Start MongoDB:
+
+```
+docker compose up -d
+```
+
+---
+
+3. Run the backend:
 
 ```
 mvn spring-boot:run
@@ -97,30 +172,111 @@ mvn spring-boot:run
 
 ---
 
-## ⚙️ Design Decisions
+4. API available at:
 
-* MongoDB was chosen as a NoSQL database for flexibility and scalability
-* Clean architecture with separation of concerns (Controller, Service, Repository)
-* DTOs used to avoid exposing internal models
-* Exception handling implemented for business rules
-
----
-
-## 🔐 Security
-
-Basic validation is implemented.
-Authentication and authorization can be extended using JWT or Spring Security.
+```
+http://localhost:9090
+```
 
 ---
 
-## ☁️ Deployment (AWS)
+## 🧪 Verify MongoDB
 
-The application can be deployed using AWS CloudFormation.
-Due to time constraints, full infrastructure setup is described but not fully implemented.
+```
+docker ps
+```
+
+You should see:
+
+```
+mongo-funds
+```
 
 ---
 
-## 👨‍💻 Author
+# 📦 Default Data
+
+Initial funds are automatically loaded using a DataLoader when the application starts.
+
+---
+
+# 📮 API Testing with Postman
+
+A Postman collection is included to facilitate testing of all endpoints.
+
+---
+
+## 📦 Import Collection
+
+1. Open Postman
+2. Click **Import**
+3. Select the collection JSON file
+
+---
+
+## ⚙️ Environment Variables
+
+| Variable       | Description           |
+| -------------- | --------------------- |
+| baseUrl        | http://localhost:9090 |
+| token          | JWT token             |
+| userId         | User ID               |
+| fundId         | Fund ID               |
+| subscriptionId | Subscription ID       |
+
+---
+
+## 🔑 Testing Flow
+
+1. Create User → `POST /api/users`
+2. Login → `POST /api/users/login`
+3. Copy token
+4. Get Funds → `GET /api/funds`
+5. Subscribe → `POST /api/funds/subscribe`
+6. Cancel → `POST /api/funds/cancel/{subscriptionId}`
+7. View subscriptions → `GET /api/funds/subscriptions/{userId}`
+
+---
+
+# 🧪 Unit Testing
+
+Unit tests are implemented using:
+
+* JUnit
+* Mockito
+
+They cover:
+
+* Successful subscription
+* Insufficient balance
+* Minimum amount validation
+* Entity not found scenarios
+
+---
+
+# ⚙️ Design Decisions
+
+* MongoDB chosen for flexibility (NoSQL)
+* Clean architecture: Controller → Service → Repository
+* DTOs used to decouple layers
+* Exception handling for business rules
+* Docker used to simplify environment setup
+
+---
+
+# ☁️ Deployment (AWS)
+
+The application can be deployed using AWS services such as:
+
+* EC2
+* ECS (Docker containers)
+
+Due to time constraints, full CloudFormation templates are not included, but the application is ready for container-based deployment.
+
+---
+
+
+# 👨‍💻 Author
 
 Carlos Torres
 Backend Developer
