@@ -266,15 +266,63 @@ They cover:
 
 # ☁️ Deployment (AWS)
 
-The application can be deployed using AWS services such as:
+The application is designed to be deployed in AWS cloud infrastructure.
 
-* EC2
-* ECS (Docker containers)
+## 🧩 Proposed Architecture
 
-Due to time constraints, full CloudFormation templates are not included, but the application is ready for container-based deployment.
+* **EC2 Instance (t2.micro)**: hosts the Spring Boot backend
+* **MongoDB (Docker or Atlas)**: database layer
+* **Security Groups**:
+
+    * Port 22 → SSH access
+    * Port 8080 → REST API access
+
+## 🚀 Deployment Steps
+
+1. Launch an EC2 instance (Amazon Linux)
+2. Configure security group (ports 22 and 8080)
+3. Connect via SSH
+4. Install Java 17
+5. Upload the application `.jar`
+6. Run:
+
+```
+java -jar app.jar
+```
+
+7. Access API:
+
+```
+http://<PUBLIC_IP>:8080
+```
 
 ---
 
+## ☁️ Infrastructure as Code (CloudFormation)
+
+A CloudFormation template is included to define the infrastructure as code.
+
+### 📁 Location
+
+```
+/infrastructure/template.yaml
+```
+
+### 🔧 Resources defined
+
+* EC2 Instance
+* Security Group
+* Network configuration
+
+### 💡 Benefit
+
+This allows:
+
+* Automated environment provisioning
+* Reproducibility
+* Scalable deployment setup
+
+---
 
 # 👨‍💻 Author
 
